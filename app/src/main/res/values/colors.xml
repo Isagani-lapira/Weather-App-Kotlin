@@ -5,4 +5,6 @@
     <color name="black">#313341</color>
     <color name="icons">#686B6F</color>
     <color name="subText">#9A938C</color>
+    <color name="glassEffect">#77FFFFFF</color>
+
 </resources>
