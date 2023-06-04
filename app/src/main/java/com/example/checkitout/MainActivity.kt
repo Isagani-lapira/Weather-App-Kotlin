@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -27,19 +29,24 @@ class MainActivity : AppCompatActivity() {
     private val API_KEY = "e54694aff45fcc2cde8ee58c3045c17c"
     private lateinit var ivWeatherIcon:ImageView
     private lateinit var tvWeather: TextView
+    private lateinit var parentLL:LinearLayout
+    private lateinit var tvPlace: TextView
+    private lateinit var tvTemp: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        window.statusBarColor = getColor(R.color.yellow) //change statusbar color
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this) //for getting location
         initialize()
         checkPermission()
     }
 
     fun initialize(){
+        parentLL = findViewById(R.id.parentLL)
         ivWeatherIcon = findViewById(R.id.ivWeatherIcon)
         tvWeather = findViewById(R.id.tvWeather)
+        tvPlace = findViewById(R.id.tvPlace)
+        tvTemp = findViewById(R.id.tvTemp)
     }
 
     //check first if the permission is already granted or not
@@ -57,6 +64,9 @@ class MainActivity : AppCompatActivity() {
                         val latitude = location.latitude
                         val longitude = location.longitude
                         getWeather(latitude,longitude)
+
+                        Log.d("YesSir", "$latitude and $longitude")
+                        getCityName(latitude, longitude)
                     }
                 }
         }else{
@@ -79,8 +89,9 @@ class MainActivity : AppCompatActivity() {
                     val forecast = forecastList.getJSONObject(i)
                     val weatherArray = forecast.getJSONArray("weather")
                     val weather = weatherArray.getJSONObject(0).getString("main")
-
-                    if(i==0) changeWeather(weather)
+                    val temp = forecast.getJSONObject("main").getString("temp")
+                    Log.d("kkkk", "getWeather: $temp")
+                    if(i==0) changeWeather(weather,temp)
                 }
             },
             { error ->
@@ -98,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         Mist
         Clear
      */
-    private fun changeWeather(weather:String) {
+    private fun changeWeather(weather:String,temp:String) {
         tvWeather.text = weather
 
         val weatherIcon = when(weather){
@@ -107,8 +118,34 @@ class MainActivity : AppCompatActivity() {
             "Clear"-> R.drawable.sunny
             else -> R.drawable.sun_rain
         }
-        ivWeatherIcon.setImageResource(weatherIcon)
 
+        //change background
+        val bgWeather = when(weather){
+            "Thunderstorm" -> R.drawable.thunderbg
+            "Rain" -> R.drawable.rainybg
+            "Clear"-> R.drawable.clearbg
+            else -> R.drawable.cloudybg
+        }
+
+        //for status bar
+        val statusBar = when(weather){
+            "Thunderstorm" -> R.color.thunder
+            "Rain" -> R.color.rainy
+            "Clear"-> R.color.clear
+            else -> R.drawable.cloudybg
+        }
+
+        window.statusBarColor = getColor(statusBar) //change statusbar color
+        ivWeatherIcon.setImageResource(weatherIcon)
+        parentLL.setBackgroundResource(bgWeather)
+        val celsius = "${kelvinToCelsius(temp)}°c"
+        tvTemp.text = celsius
+    }
+
+    private fun kelvinToCelsius(temp: String): String {
+        val kelvin = temp.toDouble()
+        //conversion to celsius
+        return (kelvin - 273.15).toString().substring(0, 5)
     }
 
     private fun requestLocPermission() {
@@ -131,5 +168,26 @@ class MainActivity : AppCompatActivity() {
             else Toast.makeText(context,"Permission denied",Toast.LENGTH_LONG).show()
 
         }
+    }
+
+
+    fun getCityName(latitude: Double, longitude: Double) {
+        val url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude"
+
+        val requestQueue = Volley.newRequestQueue(context)
+        requestQueue.start()
+
+        //get json response
+        val jsonObj = JsonObjectRequest(Request.Method.GET,url,null,
+            {response->
+                val address = response.getJSONObject("address")
+                val city = address.getString("city")
+                val state = address.getString("state")
+
+                val place = "$state,\n$city"
+                tvPlace.text = place
+            },{error->})
+
+        requestQueue.add(jsonObj)
     }
 }
