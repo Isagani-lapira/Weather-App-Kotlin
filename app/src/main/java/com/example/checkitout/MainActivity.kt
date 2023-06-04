@@ -4,7 +4,8 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -24,13 +25,21 @@ class MainActivity : AppCompatActivity() {
     private val LOCATION_CODE = 255
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val API_KEY = "e54694aff45fcc2cde8ee58c3045c17c"
+    private lateinit var ivWeatherIcon:ImageView
+    private lateinit var tvWeather: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         window.statusBarColor = getColor(R.color.yellow) //change statusbar color
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this) //for getting location
+        initialize()
         checkPermission()
+    }
+
+    fun initialize(){
+        ivWeatherIcon = findViewById(R.id.ivWeatherIcon)
+        tvWeather = findViewById(R.id.tvWeather)
     }
 
     //check first if the permission is already granted or not
@@ -71,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                     val weatherArray = forecast.getJSONArray("weather")
                     val weather = weatherArray.getJSONObject(0).getString("main")
 
-                    Log.d("Yornnn", "getWeather: $weather")
+                    if(i==0) changeWeather(weather)
                 }
             },
             { error ->
@@ -79,6 +88,27 @@ class MainActivity : AppCompatActivity() {
             })
 
         requestQueue.add(jsonObjReq)
+    }
+
+    /*
+    	Thunderstorm
+        Drizzle
+        Rain
+        Snow
+        Mist
+        Clear
+     */
+    private fun changeWeather(weather:String) {
+        tvWeather.text = weather
+
+        val weatherIcon = when(weather){
+            "Thunderstorm" -> R.drawable.thunder
+            "Rain" -> R.drawable.rain
+            "Clear"-> R.drawable.sunny
+            else -> R.drawable.sun_rain
+        }
+        ivWeatherIcon.setImageResource(weatherIcon)
+
     }
 
     private fun requestLocPermission() {
