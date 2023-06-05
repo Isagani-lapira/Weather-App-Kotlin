@@ -2,7 +2,7 @@
 <resources>
     <color name="yellow">#F5EEAC</color>
     <color name="orange">#D88865</color>
-    <color name="white">#C7C7C7</color>
+    <color name="white">#FFFFFF</color>
     <color name="icons">#686B6F</color>
     <color name="subText">#9A938C</color>
     <color name="glassEffect">#77FFFFFF</color>
@@ -11,5 +11,6 @@
     <color name="thunder">#20211F</color>
     <color name="cloudy">#CFD2C1</color>
     <color name="clear">#B2E9C2</color>
+    <color name="text">#313341</color>
 
 </resources>

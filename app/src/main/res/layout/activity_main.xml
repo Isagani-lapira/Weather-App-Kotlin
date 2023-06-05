@@ -31,13 +31,22 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/tvPlace"
+        android:id="@+id/tvState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:fontFamily="@font/inter_semibold"
-        android:text="Stockholm,\nSweden"
-        android:textSize="38sp"
+        android:text="Stockholm"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        tools:ignore="TextContrastCheck" />
+    <TextView
+        android:id="@+id/tvCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semibold"
+        android:text="Malolos"
+        android:textSize="24sp"
         android:textStyle="bold"
         tools:ignore="TextContrastCheck" />
 
@@ -45,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/inter"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:text="Tue, Jun 30"
         android:textColor="@color/subText"
         tools:ignore="TextContrastCheck" />
@@ -57,25 +66,30 @@
         android:gravity="end">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingHorizontal="15dp"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvTemp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:text="19°c"
-                android:textSize="32sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
-                tools:ignore="TextContrastCheck" />
+                android:gravity="end|bottom"
+                tools:ignore="NestedWeights,TextContrastCheck" />
 
             <TextView
                 android:id="@+id/tvWeather"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:fontFamily="@font/inter"
-                android:gravity="center"
+                android:gravity="end"
                 android:text="Sunny"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -84,14 +98,122 @@
 
         <ImageView
             android:id="@+id/ivWeatherIcon"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="100dp"
             android:contentDescription="@string/weather_icon"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sunny"
+            android:scaleType="fitCenter"
+            android:src="@drawable/rain"
             tools:ignore="ImageContrastCheck" />
 
 
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/glass_background"
+        android:layout_marginTop="10dp"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/ivDescrip"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:contentDescription="Descript Logo"
+            android:src="@drawable/sunny"
+            tools:ignore="ImageContrastCheck" />
+
+        <TextView
+            android:id="@+id/tvDescriptLabel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="5dp"
+            android:text="Description"
+            android:textColor="@color/icons"
+            tools:ignore="TextContrastCheck" />
+        <TextView
+            android:id="@+id/tvDescript"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textColor="@color/icons"
+            android:text="Light Rain"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/glass_background"
+        android:layout_marginTop="10dp"
+        android:padding="5dp">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="55dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/windpower"
+            android:contentDescription="Wind logo" />
+
+        <TextView
+            android:id="@+id/tvWindLabel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="5dp"
+            android:text="Wind"
+            android:textColor="@color/icons"
+            tools:ignore="TextContrastCheck" />
+        <TextView
+            android:id="@+id/tvWind"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textColor="@color/icons"
+            android:text="Light Rain"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/glass_background"
+        android:layout_marginTop="10dp"
+        android:padding="5dp">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="55dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/humidity"
+            android:contentDescription="Humidity Logo" />
+
+        <TextView
+            android:id="@+id/tvHumidityLabel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="5dp"
+            android:text="Humidity"
+            android:textColor="@color/icons"
+            tools:ignore="TextContrastCheck" />
+        <TextView
+            android:id="@+id/tvHumidity"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/icons"
+            android:text="64%" />
     </LinearLayout>
 
 </LinearLayout>

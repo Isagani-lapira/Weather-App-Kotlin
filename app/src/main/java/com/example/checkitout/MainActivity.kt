@@ -19,6 +19,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,10 +29,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val API_KEY = "e54694aff45fcc2cde8ee58c3045c17c"
     private lateinit var ivWeatherIcon:ImageView
+    private lateinit var ivDescrip:ImageView
     private lateinit var tvWeather: TextView
     private lateinit var parentLL:LinearLayout
-    private lateinit var tvPlace: TextView
+    private lateinit var tvCity: TextView
     private lateinit var tvTemp: TextView
+    private lateinit var tvDescription: TextView
+    private lateinit var tvHumidity: TextView
+    private lateinit var tvWind: TextView
+    private lateinit var tvDescriptionLabel: TextView
+    private lateinit var tvHumidityLabel: TextView
+    private lateinit var tvWindLabel: TextView
+    private lateinit var tvState: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -44,9 +53,17 @@ class MainActivity : AppCompatActivity() {
     fun initialize(){
         parentLL = findViewById(R.id.parentLL)
         ivWeatherIcon = findViewById(R.id.ivWeatherIcon)
+        ivDescrip = findViewById(R.id.ivDescrip)
         tvWeather = findViewById(R.id.tvWeather)
-        tvPlace = findViewById(R.id.tvPlace)
+        tvCity = findViewById(R.id.tvCity)
         tvTemp = findViewById(R.id.tvTemp)
+        tvDescription = findViewById(R.id.tvDescript)
+        tvHumidity = findViewById(R.id.tvHumidity)
+        tvWind = findViewById(R.id.tvWind)
+        tvDescriptionLabel = findViewById(R.id.tvDescriptLabel)
+        tvHumidityLabel = findViewById(R.id.tvHumidityLabel)
+        tvWindLabel = findViewById(R.id.tvWindLabel)
+        tvState = findViewById(R.id.tvState)
     }
 
     //check first if the permission is already granted or not
@@ -89,9 +106,13 @@ class MainActivity : AppCompatActivity() {
                     val forecast = forecastList.getJSONObject(i)
                     val weatherArray = forecast.getJSONArray("weather")
                     val weather = weatherArray.getJSONObject(0).getString("main")
+                    val weatherIcon = weatherArray.getJSONObject(0).getString("icon")
                     val temp = forecast.getJSONObject("main").getString("temp")
-                    Log.d("kkkk", "getWeather: $temp")
-                    if(i==0) changeWeather(weather,temp)
+                    val description = weatherArray.getJSONObject(0).getString("description")
+                    val humidity = forecast.getJSONObject("main").getString("humidity")+"%"
+                    val wind = forecast.getJSONObject("wind").getString("speed")+"km/h"
+
+                    if(i==0) changeWeather(weather,temp,description,humidity,wind,weatherIcon)
                 }
             },
             { error ->
@@ -109,7 +130,14 @@ class MainActivity : AppCompatActivity() {
         Mist
         Clear
      */
-    private fun changeWeather(weather:String,temp:String) {
+    private fun changeWeather(
+        weather:String,
+        temp:String,
+        description:String,
+        humidity:String,
+        wind:String,
+        icon:String
+    ) {
         tvWeather.text = weather
 
         val weatherIcon = when(weather){
@@ -127,19 +155,56 @@ class MainActivity : AppCompatActivity() {
             else -> R.drawable.cloudybg
         }
 
+
         //for status bar
         val statusBar = when(weather){
             "Thunderstorm" -> R.color.thunder
             "Rain" -> R.color.rainy
             "Clear"-> R.color.clear
-            else -> R.drawable.cloudybg
+            else -> R.color.cloudy
         }
 
+        val txtColor = if(weather == "Clear") R.color.icons else R.color.white
+
+        //modify values of the views
         window.statusBarColor = getColor(statusBar) //change statusbar color
         ivWeatherIcon.setImageResource(weatherIcon)
         parentLL.setBackgroundResource(bgWeather)
         val celsius = "${kelvinToCelsius(temp)}°c"
         tvTemp.text = celsius
+        tvDescription.text = description
+        tvHumidity.text = humidity
+        tvWind.text = wind
+
+        changeColor(txtColor)
+        changeWeatherIcon(icon)
+    }
+
+    private fun changeColor(color:Int) {
+        var TVArray = arrayOf<TextView>()
+
+        TVArray+=tvCity
+        TVArray+=tvTemp
+        TVArray+=tvDescription
+        TVArray+=tvHumidity
+        TVArray+=tvWind
+        TVArray+=tvDescriptionLabel
+        TVArray+=tvHumidityLabel
+        TVArray+=tvWindLabel
+        TVArray+=tvState
+
+        TVArray.forEach { textView ->
+            textView.setTextColor(getColor(color))
+        }
+    }
+
+    private fun changeWeatherIcon(icon:String) {
+        val urlIcon = "https://openweathermap.org/img/wn/$icon@2x.png"
+
+        //get the icon from the url
+        Picasso.get()
+            .load(urlIcon)
+            .into(ivDescrip)
     }
 
     private fun kelvinToCelsius(temp: String): String {
@@ -184,10 +249,11 @@ class MainActivity : AppCompatActivity() {
                 val city = address.getString("city")
                 val state = address.getString("state")
 
-                val place = "$state,\n$city"
-                tvPlace.text = place
+                tvState.text = state
+                tvCity.text = city
             },{error->})
 
         requestQueue.add(jsonObj)
+
     }
 }
