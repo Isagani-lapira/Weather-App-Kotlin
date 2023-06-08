@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_forecast"
     android:layout_margin="5dp"
+    android:id="@+id/parentLL"
     android:padding="15dp"
     tools:ignore="hardcodedText">
 
@@ -15,12 +16,12 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textStyle="bold"
+        android:textSize="10sp"
         android:text="SUN"/>
     <ImageView
         android:id="@+id/ivIcon"
-        android:layout_width="95dp"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="55dp"
         android:src="@drawable/rain"
         android:contentDescription="@string/weather_icon"/>
 

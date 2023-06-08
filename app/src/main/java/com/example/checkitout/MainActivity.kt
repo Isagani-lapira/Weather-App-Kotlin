@@ -22,6 +22,8 @@ import com.android.volley.toolbox.Volley
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.squareup.picasso.Picasso
+import java.time.LocalDate
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,7 +45,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvHumidityLabel: TextView
     private lateinit var tvWindLabel: TextView
     private lateinit var tvState: TextView
+    private lateinit var tvWeeklyForeCast: TextView
     private val list = ArrayList<Weather>()
+    private var dayIterator:Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -67,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         tvHumidityLabel = findViewById(R.id.tvHumidityLabel)
         tvWindLabel = findViewById(R.id.tvWindLabel)
         tvState = findViewById(R.id.tvState)
+        tvWeeklyForeCast = findViewById(R.id.tvWeeklyForeCast)
     }
 
     //check first if the permission is already granted or not
@@ -115,9 +120,9 @@ class MainActivity : AppCompatActivity() {
                     val humidity = forecast.getJSONObject("main").getString("humidity")+"%"
                     val wind = forecast.getJSONObject("wind").getString("speed")+"km/h"
 
-                    if(i==0) changeWeather(weather,temp,description,humidity,wind,weatherIcon)
+                    if(i==0) changeWeather(weather,temp,description,humidity,wind,weatherIcon,true)
+                    else changeWeather(weather,temp,description,humidity,wind,weatherIcon,false)
 
-                    changeWeather(weather,temp,description,humidity,wind,weatherIcon)
                 }
                 setUpRecyler(list)
             },
@@ -142,7 +147,8 @@ class MainActivity : AppCompatActivity() {
         description:String,
         humidity:String,
         wind:String,
-        icon:String
+        icon:String,
+        todayForecast:Boolean
     ) {
         tvWeather.text = weather
 
@@ -163,7 +169,7 @@ class MainActivity : AppCompatActivity() {
 
 
         //for status bar
-        val statusBar = when(weather){
+        val themeColor = when(weather){
             "Thunderstorm" -> R.color.thunder
             "Rain" -> R.color.rainy
             "Clear"-> R.color.clear
@@ -173,7 +179,7 @@ class MainActivity : AppCompatActivity() {
         val txtColor = if(weather == "Clear") R.color.icons else R.color.white
 
         //modify values of the views
-        window.statusBarColor = getColor(statusBar) //change statusbar color
+        window.statusBarColor = getColor(themeColor) //change statusbar color
         ivWeatherIcon.setImageResource(weatherIcon)
         parentLL.setBackgroundResource(bgWeather)
         val celsius = "${kelvinToCelsius(temp)}°c"
@@ -185,7 +191,18 @@ class MainActivity : AppCompatActivity() {
         changeColor(txtColor)
         changeWeatherIcon(icon)
 
-        list.add(Weather("null",weatherIcon,weather,temp))
+        val dayOfWeek = getDay()
+        if(!todayForecast)
+            list.add(Weather(dayOfWeek,weatherIcon,weather,celsius,themeColor))
+    }
+
+    private fun getDay():String {
+        val localDate = LocalDate.now()
+        val dayofWeek = (localDate.dayOfWeek+ dayIterator.toLong())-1
+
+        dayIterator++
+        return dayofWeek.toString()
+
     }
 
     private fun changeColor(color:Int) {
@@ -200,7 +217,9 @@ class MainActivity : AppCompatActivity() {
         TVArray+=tvHumidityLabel
         TVArray+=tvWindLabel
         TVArray+=tvState
+        TVArray+=tvWeeklyForeCast
 
+        //set the color of all textview depending on the theme
         TVArray.forEach { textView ->
             textView.setTextColor(getColor(color))
         }
@@ -218,7 +237,7 @@ class MainActivity : AppCompatActivity() {
     private fun kelvinToCelsius(temp: String): String {
         val kelvin = temp.toDouble()
         //conversion to celsius
-        return (kelvin - 273.15).toString().substring(0, 5)
+        return (kelvin - 273.15).toString().substring(0, 2)
     }
 
     private fun requestLocPermission() {
@@ -270,9 +289,7 @@ class MainActivity : AppCompatActivity() {
         val linearLayout = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
 
         recyler.layoutManager = linearLayout
-        val adapter = CustomAdapter(weatherList)
-
-        Log.d("rarr", "Pumasok dine")
+        val adapter = CustomAdapter(weatherList,context)
         recyler.adapter = adapter
 
     }

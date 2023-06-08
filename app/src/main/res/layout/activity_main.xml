@@ -68,7 +68,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:paddingHorizontal="15dp"
+            android:paddingHorizontal="5dp"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -217,9 +217,11 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tvWeeklyForeCast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:layout_margin="10dp"
+        android:textSize="18sp"
         android:textColor="@color/icons"
         android:text="WEEKLY FORECAST"/>
 
