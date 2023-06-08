@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
@@ -41,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvHumidityLabel: TextView
     private lateinit var tvWindLabel: TextView
     private lateinit var tvState: TextView
+    private val list = ArrayList<Weather>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -113,7 +116,10 @@ class MainActivity : AppCompatActivity() {
                     val wind = forecast.getJSONObject("wind").getString("speed")+"km/h"
 
                     if(i==0) changeWeather(weather,temp,description,humidity,wind,weatherIcon)
+
+                    changeWeather(weather,temp,description,humidity,wind,weatherIcon)
                 }
+                setUpRecyler(list)
             },
             { error ->
                 Toast.makeText(context,error.message.toString(),Toast.LENGTH_LONG).show()
@@ -178,6 +184,8 @@ class MainActivity : AppCompatActivity() {
 
         changeColor(txtColor)
         changeWeatherIcon(icon)
+
+        list.add(Weather("null",weatherIcon,weather,temp))
     }
 
     private fun changeColor(color:Int) {
@@ -254,6 +262,18 @@ class MainActivity : AppCompatActivity() {
             },{error->})
 
         requestQueue.add(jsonObj)
+
+    }
+
+    private fun setUpRecyler(weatherList : ArrayList<Weather>){
+        val recyler:RecyclerView = findViewById(R.id.rvForecast)
+        val linearLayout = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+
+        recyler.layoutManager = linearLayout
+        val adapter = CustomAdapter(weatherList)
+
+        Log.d("rarr", "Pumasok dine")
+        recyler.adapter = adapter
 
     }
 }
