@@ -37,7 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:fontFamily="@font/inter_semibold"
-        android:text="Stockholm"
         android:textSize="32sp"
         android:textStyle="bold"
         tools:ignore="TextContrastCheck" />
@@ -46,7 +45,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/inter_semibold"
-        android:text="Malolos"
         android:textSize="24sp"
         android:textStyle="bold"
         tools:ignore="TextContrastCheck" />
@@ -56,7 +54,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/inter"
         android:textSize="16sp"
-        android:text="Tue, Jun 30"
         android:textColor="@color/subText"
         tools:ignore="TextContrastCheck" />
 
@@ -78,7 +75,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="19°c"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:gravity="end|bottom"
@@ -91,7 +87,6 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/inter"
                 android:gravity="end"
-                android:text="Sunny"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:ignore="TextContrastCheck" />
@@ -104,7 +99,6 @@
             android:layout_height="100dp"
             android:contentDescription="@string/weather_icon"
             android:scaleType="fitCenter"
-            android:src="@drawable/rain"
             tools:ignore="ImageContrastCheck" />
 
 
@@ -124,7 +118,6 @@
             android:layout_height="55dp"
             android:layout_weight="1"
             android:contentDescription="Descript Logo"
-            android:src="@drawable/sunny"
             tools:ignore="ImageContrastCheck" />
 
         <TextView
@@ -143,7 +136,6 @@
             android:layout_weight="2"
             android:gravity="center"
             android:textColor="@color/icons"
-            android:text="Light Rain"
             android:layout_height="match_parent"/>
     </LinearLayout>
 
@@ -178,7 +170,6 @@
             android:layout_weight="2"
             android:gravity="center"
             android:textColor="@color/icons"
-            android:text="Light Rain"
             android:layout_height="match_parent"/>
     </LinearLayout>
 
@@ -213,8 +204,7 @@
             android:layout_weight="2"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textColor="@color/icons"
-            android:text="64%" />
+            android:textColor="@color/icons" />
     </LinearLayout>
 
     <TextView
@@ -222,9 +212,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:textSize="18sp"
+        android:text="WEEKLY FORECAST"
         android:textColor="@color/icons"
-        android:text="WEEKLY FORECAST"/>
+        android:textSize="18sp"
+        tools:ignore="TextContrastCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvForecast"

@@ -212,6 +212,7 @@ class MainActivity : AppCompatActivity() {
             list.add(Weather(dayOfWeek,weatherIcon,weather,celsius,themeColor))
     }
 
+    //provide the day for next 5days
     private fun getDay():String {
         val localDate = LocalDate.now()
         val dayofWeek = (localDate.dayOfWeek+ dayIterator.toLong())-1
@@ -325,8 +326,9 @@ class MainActivity : AppCompatActivity() {
 
                 cityLat = lat.toDouble()
                 cityLong = long.toDouble()
-                getWeather(cityLat, cityLong)
 
+                list.clear()
+                getWeather(cityLat, cityLong)
             }, { error -> }
         )
 
