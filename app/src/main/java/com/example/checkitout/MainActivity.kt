@@ -21,9 +21,10 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.squareup.picasso.Picasso
 import java.time.LocalDate
-import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,8 +47,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvWindLabel: TextView
     private lateinit var tvState: TextView
     private lateinit var tvWeeklyForeCast: TextView
+    private lateinit var etSearch: TextInputEditText
     private val list = ArrayList<Weather>()
     private var dayIterator:Int = 0
+    private lateinit var tfSearch: TextInputLayout
+    private var cityLat = 0.0
+    private var cityLong = 0.0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -72,6 +79,17 @@ class MainActivity : AppCompatActivity() {
         tvWindLabel = findViewById(R.id.tvWindLabel)
         tvState = findViewById(R.id.tvState)
         tvWeeklyForeCast = findViewById(R.id.tvWeeklyForeCast)
+        tfSearch = findViewById(R.id.tfSearch)
+        etSearch = findViewById(R.id.etSearch)
+
+        tfSearch.setEndIconOnClickListener{
+            searchPlace()
+        }
+    }
+
+    private fun searchPlace() {
+        val place = etSearch.text.toString()
+        getLatLongtitude(place)
     }
 
     //check first if the permission is already granted or not
@@ -89,8 +107,6 @@ class MainActivity : AppCompatActivity() {
                         val latitude = location.latitude
                         val longitude = location.longitude
                         getWeather(latitude,longitude)
-
-                        Log.d("YesSir", "$latitude and $longitude")
                         getCityName(latitude, longitude)
                     }
                 }
@@ -291,6 +307,29 @@ class MainActivity : AppCompatActivity() {
         recyler.layoutManager = linearLayout
         val adapter = CustomAdapter(weatherList,context)
         recyler.adapter = adapter
+    }
 
+
+    private fun getLatLongtitude(place: String) {
+        val api_key = "ff8899a8f2a14c27adc813402bb49bee"
+        val url = "https://api.opencagedata.com/geocode/v1/json?q=$place&key=$api_key"
+        val requestQueue = Volley.newRequestQueue(context)
+        requestQueue.start()
+        Log.d("rorror", "getLatLongtitude: $place")
+        val JsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
+            { response ->
+                val result = response.getJSONArray("results").getJSONObject(0)
+                val geometry = result.getJSONObject("geometry")
+                val lat = geometry.getString("lat")
+                val long = geometry.getString("lng")
+
+                cityLat = lat.toDouble()
+                cityLong = long.toDouble()
+                getWeather(cityLat, cityLong)
+
+            }, { error -> }
+        )
+
+        requestQueue.add(JsonObjectRequest)
     }
 }
