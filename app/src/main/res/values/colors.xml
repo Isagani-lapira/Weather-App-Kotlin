@@ -7,10 +7,11 @@
     <color name="subText">#9A938C</color>
     <color name="glassEffect">#77FFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
-    <color name="rainy">#405139</color>
+    <color name="rainy">#22397C</color>
     <color name="thunder">#20211F</color>
-    <color name="cloudy">#CFD2C1</color>
-    <color name="clear">#B2E9C2</color>
+    <color name="cloudy">#3A5183</color>
+    <color name="snowy">#8688C1</color>
+    <color name="clear">#61A7DA</color>
     <color name="text">#313341</color>
 
 </resources>

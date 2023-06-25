@@ -5,7 +5,6 @@
     android:id="@+id/parentLL"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/sunnybg"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".MainActivity"

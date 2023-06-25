@@ -149,14 +149,6 @@ class MainActivity : AppCompatActivity() {
         requestQueue.add(jsonObjReq)
     }
 
-    /*
-    	Thunderstorm
-        Drizzle
-        Rain
-        Snow
-        Mist
-        Clear
-     */
     private fun changeWeather(
         weather:String,
         temp:String,
@@ -168,17 +160,22 @@ class MainActivity : AppCompatActivity() {
     ) {
         tvWeather.text = weather
 
+        //icon
         val weatherIcon = when(weather){
             "Thunderstorm" -> R.drawable.thunder
             "Rain" -> R.drawable.rain
+            "Drizzle"->R.drawable.rain
             "Clear"-> R.drawable.sunny
+            "Mist"->R.drawable.mist
+            "Snow"->R.drawable.snow
             else -> R.drawable.sun_rain
         }
 
         //change background
         val bgWeather = when(weather){
             "Thunderstorm" -> R.drawable.thunderbg
-            "Rain" -> R.drawable.rainybg
+            "Rain" -> R.drawable.rainbg
+            "Snow"->R.drawable.snowbg
             "Clear"-> R.drawable.clearbg
             else -> R.drawable.cloudybg
         }
@@ -188,11 +185,12 @@ class MainActivity : AppCompatActivity() {
         val themeColor = when(weather){
             "Thunderstorm" -> R.color.thunder
             "Rain" -> R.color.rainy
+            "Snow" -> R.color.snowy
             "Clear"-> R.color.clear
             else -> R.color.cloudy
         }
 
-        val txtColor = if(weather == "Clear") R.color.icons else R.color.white
+        val txtColor = if(weather == "Clear" || weather == "Clouds") R.color.icons else R.color.white
 
         //modify values of the views
         window.statusBarColor = getColor(themeColor) //change statusbar color
@@ -235,6 +233,7 @@ class MainActivity : AppCompatActivity() {
         TVArray+=tvWindLabel
         TVArray+=tvState
         TVArray+=tvWeeklyForeCast
+        TVArray+=tvWeather
 
         //set the color of all textview depending on the theme
         TVArray.forEach { textView ->
